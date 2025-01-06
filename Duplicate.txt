@@ -1,0 +1,37 @@
+Sub FindAndHighlightDuplicates()
+    Dim ws As Worksheet
+    Dim cell As Range
+    Dim cellValue As String
+    Dim values() As String
+    Dim i As Long, j As Long
+    Dim foundDuplicate As Boolean
+    
+    ' Set the worksheet
+    Set ws = ThisWorkbook.Sheets("Sheet1") ' Change "Sheet1" to your actual sheet name
+    
+    ' Loop through each cell in Column A
+    For Each cell In ws.Range("A1:A" & ws.Cells(ws.Rows.Count, 1).End(xlUp).Row)
+        cellValue = cell.Value
+        values = Split(cellValue, ",")
+        foundDuplicate = False
+        
+        ' Loop through the values and compare for duplicates
+        For i = LBound(values) To UBound(values)
+            If values(i) <> "" Then
+                For j = i + 1 To UBound(values)
+                    If values(j) <> "" And Trim(values(i)) = Trim(values(j)) Then
+                        foundDuplicate = True
+                        Exit For
+                    End If
+                Next j
+            End If
+            
+            If foundDuplicate Then Exit For
+        Next i
+        
+        ' If a duplicate is found, highlight the cell with a yellow background color
+        If foundDuplicate Then
+            cell.Interior.Color = RGB(255, 255, 0)
+        End If
+    Next cell
+End Sub
